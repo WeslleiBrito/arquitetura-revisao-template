@@ -5,10 +5,10 @@ export class AuthorBusiness {
 
     constructor(
         private authorDatabase: AuthorDatabase
-    ){}
+    ) { }
 
-    public getAllAuthor = async (): Promise<Author[]> => {
-        
-        return await this.authorDatabase.getAllAuthor()
+    public getAuthor = async (): Promise<Author[]> => {
+
+        return await this.authorDatabase.getAuthor()
     }
 }

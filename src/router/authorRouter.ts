@@ -12,4 +12,4 @@ const newAuthorControler = new AuthorController(
     )
 )
 
-authorRouter.get('/', newAuthorControler.getAllAuthor)
+authorRouter.get('/', newAuthorControler.getAuthor)
