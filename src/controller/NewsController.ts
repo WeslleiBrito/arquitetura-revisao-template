@@ -1,7 +1,10 @@
 import { Response, Request } from "express"
 import { NewsBusiness } from "../business/NewsBusiness"
-import { createNewsInputDTO } from "../dtos/createNews.dto"
+import { createNewsInputDTO, createNewsSchema } from "../dtos/createNews.dto"
 import { ZodError } from "zod";
+import { BaseError } from "../errors/BaseError";
+import { News } from "../models/News";
+import { editNewsInputDTO, editNewsSchema } from "../dtos/editNews.dto";
 
 export class NewsController {
 
@@ -18,25 +21,61 @@ export class NewsController {
             res.send(error)
         }
     }
+
     public createNews = async (req: Request, res: Response) => {
 
         try {
+            const input = createNewsSchema.parse(
 
-            const input: createNewsInputDTO = {
-                id: req.body.id,
-                title: req.body.title,
-                description: req.body.description,
-                author: req.body.author
-            }
+                {
+                    id: req.body.id,
+                    title: req.body.title,
+                    description: req.body.description,
+                    author: req.body.author
+                }
+            )
+            
 
-            const result = await this.newsBusiness.createNews(input)
+            const output: News = await this.newsBusiness.createNews(input)
 
-            res.status(200).send(result)
+            res.status(201).send(output)
         } catch (error) {
-
+            
             if (error instanceof ZodError) {
                 res.status(400).send(error.issues)
-            } else {
+            } else if(error instanceof BaseError){
+                res.status(error.statusCode).send(error.message)
+            }
+            else {
+                res.send(error)
+            }
+
+        }
+    }
+
+    public editNews = async (req: Request, res: Response) => {
+
+        try {
+
+            const input = editNewsSchema.parse(
+                {
+                    idNews: req.params.id,
+                    title: req.body.title,
+                    description: req.body.description
+                }
+            ) 
+
+            const output: News = await this.newsBusiness.editNews(input)
+
+            res.status(201).send(output)
+        } catch (error) {
+            
+            if (error instanceof ZodError) {
+                res.status(400).send(error.issues)
+            } else if(error instanceof BaseError){
+                res.status(error.statusCode).send(error.message)
+            }
+            else {
                 res.send(error)
             }
 

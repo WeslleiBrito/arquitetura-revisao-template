@@ -9,7 +9,7 @@ export class AuthorDatabase extends BaseDatabase {
 
         if (id) {
 
-            const result: Author[] = await BaseDatabase.connection(AuthorDatabase.TABLE_AUTHOR).where(id)
+            const result: Author[] = await BaseDatabase.connection(AuthorDatabase.TABLE_AUTHOR).where({id})
             return result
         }
 

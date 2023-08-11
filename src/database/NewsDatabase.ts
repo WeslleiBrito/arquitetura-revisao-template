@@ -1,4 +1,5 @@
 import { createNewsInputDTO } from "../dtos/createNews.dto";
+import { editNewsInputDTO } from "../dtos/editNews.dto";
 import { NewsDBModel } from "../types/type";
 import { BaseDatabase } from "./BaseDatabase";
 
@@ -19,12 +20,22 @@ export class NewsDatabase extends BaseDatabase {
         return result
     }
 
-    public createNews = async (input: createNewsInputDTO) => {
-
-        const result = await BaseDatabase.connection(NewsDatabase.TABLE_NEWS).returning("*").insert(input)
-
-        console.log("Linha 20 - NewsDatadase:", result)
+    public createNews = async (input: createNewsInputDTO): Promise<NewsDBModel[]> => {
+        
+        const result: NewsDBModel[] = await BaseDatabase.connection(NewsDatabase.TABLE_NEWS).returning("*").insert(input)
 
         return result
+    }
+
+    public editNews = async (input: editNewsInputDTO): Promise<NewsDBModel[]> => {
+        
+        const update: NewsDBModel[] = await BaseDatabase.connection(NewsDatabase.TABLE_NEWS).update(
+            {
+                title: input.title,
+                description: input.description
+            }
+        ).where({id: input.idNews}).returning("*")
+
+        return update
     }
 }

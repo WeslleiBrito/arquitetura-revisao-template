@@ -14,3 +14,4 @@ const newNewsController = new NewsController(
 )
 newsRouter.get('/', newNewsController.getNews)
 newsRouter.post('/', newNewsController.createNews)
+newsRouter.put('/:id', newNewsController.editNews)
